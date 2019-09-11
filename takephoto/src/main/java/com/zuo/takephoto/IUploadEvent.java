@@ -8,7 +8,12 @@ public interface IUploadEvent {
 
 
     //拍照裁剪成功
-    void takephotoSuccessEvent(String uri, String origin);
+    /*
+     * originUri : 原始 uri
+     * cropUri : 裁剪后缓存的路径 uri
+     *
+     */
+    void takephotoSuccessEvent(String originUri,String cropUri);
     //拍照裁剪失败
     void takephotoErrorEvent(String error);
 

@@ -28,5 +28,17 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 
+    implementation('com.github.bumptech.glide:glide:3.7.0') {
+        exclude group: "com.android.support"
+    }
+
+   // api 'com.android.support:design:28.0.0'
+
+    //permission
+    //api 'com.github.zuochunsheng:permission:0.3'
+
+    //图片选择  裁剪
+   // api 'com.github.yalantis:ucrop:2.2.2'
+
     implementation project(path: ':takephoto')
 }

@@ -33,10 +33,13 @@ public class ShadowActivity extends Activity {
     // 7.0 以下的uri
     private Uri mUri;
     // 图片路径
-    private String mFilepath = Environment.getExternalStorageDirectory() + "/takephoto"  + ".jpg";
-    private String mFilepathCrop = Environment.getExternalStorageDirectory() + "/takenphoto_crop" +  + System.currentTimeMillis() + ".jpg";
+    //private String mFilepath = Environment.getExternalStorageDirectory() +"/hc" +"/takephoto"  + ".jpg";
+    private String mFilepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() +"/hc" +"/takephoto"  + ".jpg";
 
+    //private String mFilepathCrop = Environment.getExternalStorageDirectory() + "/hc"+"/takephoto_crop" + System.currentTimeMillis() + ".jpg";
+    private String mFilepathCrop = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/hc"+"/takephoto_crop" + System.currentTimeMillis() + ".jpg";
 
+    private boolean isNeedCrop ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,7 @@ public class ShadowActivity extends Activity {
 
     private void handleIntent(Intent intent) {
         int index = intent.getIntExtra("permissions", 0);
+        isNeedCrop = intent.getBooleanExtra("isNeedCrop", false);
         startTakePhotos(index);
     }
 
@@ -108,38 +112,46 @@ public class ShadowActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         Log.d("zuo", "mineFragment onActivityResult");
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CAMERA:
-                    // 拍照
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        // 调用裁剪方法
-                        cropRawPhoto(mProviderUri);
+                    if(isNeedCrop){
+                        // 拍照
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            // 调用裁剪方法
+                            cropRawPhoto(mProviderUri);
 
-                    } else {
-                        cropRawPhoto(mUri);
+                        } else {
+                            cropRawPhoto(mUri);
+                        }
+                    }else {
+                        TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS,  mFilepath);
+                        finish();
                     }
                     break;
                 case SELECT_FILE:
-
-                    //Log.d("zuo", "SELECT_FILE: " + data.getData());//content://media/external/images/media/1384759
-                    cropRawPhoto(data.getData());
+                    if(isNeedCrop){
+                        cropRawPhoto(data.getData());
+                    }else {
+                        TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS,  data.getData().toString());
+                        finish();
+                    }
                     break;
-
                 case UCrop.REQUEST_CROP:
                     // 成功（返回的是文件地址）
                     Uri resultUri = UCrop.getOutput(data);
                     //Log.e("zuo", "REQUEST_UCROP:" + resultUri.toString());
+
                     Log.e("zuo", "mFilepath.getAbsolutePath<> " + new File(mFilepath).getAbsolutePath() + " ,大小<> " + new File(mFilepath).length());
                     Log.e("zuo", "uri.getAbsolutePath<> " + new File(resultUri.getPath()).getAbsolutePath() + " ,大小<> " + new File(resultUri.getPath()).length());
-                    TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS, resultUri.getPath(), mFilepath);
+
+                    TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS, mFilepath, resultUri.getPath());
+
                     finish();
                     break;
                 case UCrop.RESULT_ERROR:
                     // 失败
-                    //mUploadListener.takephotoErrorEvent(UCrop.getError(data) + "");
                     TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_ERROR, UCrop.getError(data) + "");
                     finish();
                     break;

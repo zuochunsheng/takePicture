@@ -22,27 +22,34 @@ import java.util.List;
 public class TakephotoUtil {
 
 
-    public static final int RESULT_TAKEPHOTO_SUCCESS = 0 ;
-    public static final int RESULT_TAKEPHOTO_ERROR = 1 ;
+    public static final int RESULT_TAKEPHOTO_SUCCESS = 0;
+    public static final int RESULT_TAKEPHOTO_ERROR = 1;
 
     private static IUploadEvent mUploadListener;
 
-    private Context  context;
+    private Context context;
     private static TakephotoUtil instance;
+    private boolean isNeedCrop = false;
+
     // 单例模式中获取唯一的TakephotoUtil实例  synchronized
-    public static  TakephotoUtil getInstance(Context context) {
+    public static TakephotoUtil getInstance(Context context) {
         if (instance == null) {
             instance = new TakephotoUtil(context);//.getApplicationContext()  bottomSheet 弹不出
         }
         return instance;
     }
+
     public TakephotoUtil(Context context) {
         this.context = context;
-
     }
 
-    private void setUploadListener(IUploadEvent nUploadListener){
+    private void setUploadListener(IUploadEvent nUploadListener) {
         mUploadListener = nUploadListener;
+    }
+
+    public TakephotoUtil setIsNeedCrop(boolean isNeedCrop) {
+        this.isNeedCrop = isNeedCrop;
+        return instance ;
     }
 
 
@@ -52,17 +59,19 @@ public class TakephotoUtil {
         PermissionUtil.getInstance(context)
                 .requestRunTimePermission(new String[]{
                                 Manifest.permission.CAMERA,
-                                Manifest.permission.READ_EXTERNAL_STORAGE},
+                                Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         new IPermission() {
                             @Override
                             public void onGranted() {
-                                setUploadListener(nUploadListener) ;
+                                setUploadListener(nUploadListener);
                                 initBottomSheetDialog();
                             }
 
                             @Override
                             public void onDenied(List<String> deniedPermission) {
-                                Toast.makeText(context,"授权未通过",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "授权未通过", Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -112,28 +121,32 @@ public class TakephotoUtil {
 
         Intent intent = new Intent(context, ShadowActivity.class);
         intent.putExtra("permissions", index);
+        intent.putExtra("isNeedCrop", isNeedCrop);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
 
-
-
-
     //回调 ---十分巧妙
-    public void onRequestPermissionsResult( int resultCode, String result,String...args) {
+    public void onRequestPermissionsResult(int resultCode, String result, String... args) {
 
         Log.d("zuo", "mineFragment onActivityResult");
 
-            switch (resultCode) {
-                case RESULT_TAKEPHOTO_SUCCESS:
-                    mUploadListener.takephotoSuccessEvent(result,args[0]);
-                    break;
-                case RESULT_TAKEPHOTO_ERROR:
-                    // 失败
-                    mUploadListener.takephotoErrorEvent(result);
-                    break;
-            }
+        switch (resultCode) {
+            case RESULT_TAKEPHOTO_SUCCESS:
+                //第一个参数 原始uri
+                // 第二个参数 裁剪后的 uri (isNeedCrop = true 是有值)
+                if(isNeedCrop){
+                    mUploadListener.takephotoSuccessEvent(result, args[0]);
+                }else {
+                    mUploadListener.takephotoSuccessEvent(result, null);
+                }
+                break;
+            case RESULT_TAKEPHOTO_ERROR:
+                // 失败
+                mUploadListener.takephotoErrorEvent(result);
+                break;
+        }
 
     }
 
