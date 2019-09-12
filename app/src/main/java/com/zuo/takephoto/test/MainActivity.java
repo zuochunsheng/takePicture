@@ -20,6 +20,7 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView ivCrop;
+    private ImageView iv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btn = findViewById(R.id.btn);
         Button btnCrop = findViewById(R.id.btnCrop);
         ivCrop = findViewById(R.id.ivCrop);
+        iv = findViewById(R.id.iv);
 
         btn.setOnClickListener(this);
         btnCrop.setOnClickListener(this);
@@ -38,17 +40,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn:
-                onBtnCropClick(ivCrop,false);
+                onBtnCropClick(false);
                 //Toast.makeText(this,"拍照 不含裁剪",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnCrop:
-                onBtnCropClick(ivCrop,true);
+                onBtnCropClick(true);
                 break;
         }
     }
 
-    private void onBtnCropClick(final ImageView imageView,final boolean isNeedCrop) {
-
+    private void onBtnCropClick(final boolean isNeedCrop) {
+        //isNeedCrop 默认false
         TakephotoUtil.getInstance(this)
                 .setIsNeedCrop(isNeedCrop)
                 .checkPermissions(new IUploadEvent() {
@@ -58,9 +60,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         Log.e("zuo", "原始.getAbsolutePath<> " + new File(originUri).getAbsolutePath() + " ,大小<> " + new File(originUri).length());
 
+
+
+
                         if(isNeedCrop){
                             Log.e("zuo", "裁剪后缓存的路径 :" + cropUri);
                             Log.e("zuo", "裁剪后.getAbsolutePath<> " + new File(cropUri).getAbsolutePath() + " ,大小<> " + new File(cropUri).length());
+
+                            Glide.with(MainActivity.this)
+                                    .load(cropUri)
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .centerCrop()
+                                    .into(ivCrop);
                         }
 
 
@@ -68,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .load(originUri)
                                 .placeholder(R.mipmap.ic_launcher)
                                 .centerCrop()
-                                .into(imageView);
+                                .into(iv);
                     }
 
                     @Override
