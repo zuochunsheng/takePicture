@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">takePhoto</string>
+    <string name="app_name">takePicture</string>
 
     <string name="bottom_sheet_photolist">从相册选择</string>
     <string name="bottom_sheet_takephoto">拍一张</string>
