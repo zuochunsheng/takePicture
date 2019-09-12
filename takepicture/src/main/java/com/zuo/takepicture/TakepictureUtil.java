@@ -122,7 +122,7 @@ public class TakepictureUtil {
 
 
     //回调 ---十分巧妙
-    public void onRequestPermissionsResult(int resultCode, String result) {
+    void onRequestPermissionsResult(int resultCode, String result) {
         switch (resultCode) {
             case RESULT_TAKEPHOTO_SUCCESS:
                 mUploadListener.takepictureSuccessEvent(result);
