@@ -3,11 +3,14 @@ package com.zuo.takephoto;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import java.io.File;
 /**
  * anther: created by zcs on 2019/9/11 18 : 24
  * description :
+ * 问题 从相册选择 路径为 /content:/media/external/images/media/1833619 ,大小<> 0
  */
 public class ShadowActivity extends Activity {
 
@@ -34,12 +38,14 @@ public class ShadowActivity extends Activity {
     private Uri mUri;
     // 图片路径
     //private String mFilepath = Environment.getExternalStorageDirectory() +"/hc" +"/takephoto"  + ".jpg";
-    private String mFilepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() +"/hc" +"/takephoto"  + ".jpg";
+    private String mFilepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() +"/hc" +"/takephoto_"  + System.currentTimeMillis() + ".jpg";
 
     //private String mFilepathCrop = Environment.getExternalStorageDirectory() + "/hc"+"/takephoto_crop" + System.currentTimeMillis() + ".jpg";
-    private String mFilepathCrop = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/hc"+"/takephoto_crop" + System.currentTimeMillis() + ".jpg";
+    private String mFilepathCrop = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/hc"+"/takephoto_crop_" + System.currentTimeMillis() + ".jpg";
 
     private boolean isNeedCrop ;
+    private int index ;
+    private String photoPath = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +60,7 @@ public class ShadowActivity extends Activity {
     }
 
     private void handleIntent(Intent intent) {
-        int index = intent.getIntExtra("permissions", 0);
+        index = intent.getIntExtra("permissions", 0);
         isNeedCrop = intent.getBooleanExtra("isNeedCrop", false);
         startTakePhotos(index);
     }
@@ -112,7 +118,6 @@ public class ShadowActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("zuo", "mineFragment onActivityResult");
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CAMERA:
@@ -132,20 +137,28 @@ public class ShadowActivity extends Activity {
                     break;
                 case SELECT_FILE:
                     if(isNeedCrop){
+                        photoPath = getPhotoPath(data.getData());
                         cropRawPhoto(data.getData());
+
                     }else {
-                        TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS,  data.getData().toString());
+                            TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS, getPhotoPath(data.getData()));
+
                         finish();
                     }
                     break;
                 case UCrop.REQUEST_CROP:
                     // 成功（返回的是文件地址）
                     Uri resultUri = UCrop.getOutput(data);
-                    //Log.e("zuo", "REQUEST_UCROP:" + resultUri.toString());
+                    //Uri inputUri = data.getParcelableExtra(UCrop.EXTRA_INPUT_URI);
+                    //Log.e("zuo","origon:" +inputUri.toString());
+                    //Log.e("zuo", "crop:" + resultUri.toString());//file:///storage/emulated/0/Pictures/hc/takephoto_crop_1568262848725.jpg
 
-                    Log.e("zuo", "mFilepath.getAbsolutePath<> " + new File(mFilepath).getAbsolutePath() + " ,大小<> " + new File(mFilepath).length());
-                    Log.e("zuo", "uri.getAbsolutePath<> " + new File(resultUri.getPath()).getAbsolutePath() + " ,大小<> " + new File(resultUri.getPath()).length());
+                    //Log.e("zuo", "mFilepath.getAbsolutePath<> " + new File(mFilepath).getAbsolutePath() + " ,大小<> " + new File(mFilepath).length());
+                    //Log.e("zuo", "uri.getAbsolutePath<> " + new File(resultUri.getPath()).getAbsolutePath() + " ,大小<> " + new File(resultUri.getPath()).length());
 
+                    if(index == 0){
+                        mFilepath = photoPath;
+                    }
                     TakephotoUtil.getInstance(this).onRequestPermissionsResult(TakephotoUtil.RESULT_TAKEPHOTO_SUCCESS, mFilepath, resultUri.getPath());
 
                     finish();
@@ -157,10 +170,29 @@ public class ShadowActivity extends Activity {
                     break;
             }
         } else if (resultCode == RESULT_CANCELED) {
+
             finish();
         }
     }
 
+    //相册选择 ，不带后缀名的图片 返回带后后缀名的相册图片
+    private String getPhotoPath(Uri uri){
+        try {
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String path = cursor.getString(columnIndex);  //获取照片路径
+            cursor.close();
+            //Bitmap bitmap = BitmapFactory.decodeFile(path);
+            return path ;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return uri.toString();
+        }
+
+    }
 
     public void cropRawPhoto(Uri uri) {
         Log.e("zuo", "cropRawPhoto: " + uri.toString());
