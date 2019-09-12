@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId "com.zuo.takephoto.test"
+        applicationId "com.zuo.takepicture.test"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
@@ -37,8 +37,5 @@ dependencies {
     //permission
     //api 'com.github.zuochunsheng:permission:0.3'
 
-    //图片选择  裁剪
-   // api 'com.github.yalantis:ucrop:2.2.2'
-
-    implementation project(path: ':takephoto')
+    implementation project(path: ':takepicture')
 }

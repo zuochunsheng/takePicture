@@ -1,4 +1,4 @@
-package com.zuo.takephoto;
+package com.zuo.takepicture;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,42 +14,38 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.List;
 
+import com.zuo.takepicture.R;
+
 
 /**
  * anther: created by zcs on 2019/9/11 17 : 30
  * description :BottomSheetDialog :design:28.0.0
  */
-public class TakephotoUtil {
+public class TakepictureUtil {
 
 
     public static final int RESULT_TAKEPHOTO_SUCCESS = 0;
-    public static final int RESULT_TAKEPHOTO_ERROR = 1;
+    //public static final int RESULT_TAKEPHOTO_ERROR = 1;
 
     private static IUploadEvent mUploadListener;
 
     private Context context;
-    private static TakephotoUtil instance;
-    private boolean isNeedCrop = false;
+    private static TakepictureUtil instance;
 
     // 单例模式中获取唯一的TakephotoUtil实例  synchronized
-    public static TakephotoUtil getInstance(Context context) {
+    public static TakepictureUtil getInstance(Context context) {
         if (instance == null) {
-            instance = new TakephotoUtil(context);//.getApplicationContext()  bottomSheet 弹不出
+            instance = new TakepictureUtil(context);//.getApplicationContext()  bottomSheet 弹不出
         }
         return instance;
     }
 
-    public TakephotoUtil(Context context) {
+    public TakepictureUtil(Context context) {
         this.context = context;
     }
 
     private void setUploadListener(IUploadEvent nUploadListener) {
         mUploadListener = nUploadListener;
-    }
-
-    public TakephotoUtil setIsNeedCrop(boolean isNeedCrop) {
-        this.isNeedCrop = isNeedCrop;
-        return instance ;
     }
 
 
@@ -120,33 +116,20 @@ public class TakephotoUtil {
 
         Intent intent = new Intent(context, ShadowActivity.class);
         intent.putExtra("permissions", index);
-        intent.putExtra("isNeedCrop", isNeedCrop);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
 
     //回调 ---十分巧妙
-    public void onRequestPermissionsResult(int resultCode, String result, String... args) {
-
-        Log.d("zuo", "mineFragment onActivityResult");
-
+    public void onRequestPermissionsResult(int resultCode, String result) {
         switch (resultCode) {
             case RESULT_TAKEPHOTO_SUCCESS:
-                //第一个参数 原始uri
-                // 第二个参数 裁剪后的 uri (isNeedCrop = true 是有值)
-                if(isNeedCrop){
-                    mUploadListener.takephotoSuccessEvent(result, args[0]);
-                }else {
-                    mUploadListener.takephotoSuccessEvent(result, null);
-                }
-                break;
-            case RESULT_TAKEPHOTO_ERROR:
-                // 失败
-                mUploadListener.takephotoErrorEvent(result);
-                break;
-        }
+                mUploadListener.takepictureSuccessEvent(result);
 
+                break;
+
+        }
     }
 
 }

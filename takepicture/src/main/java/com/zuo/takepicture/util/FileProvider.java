@@ -1,4 +1,4 @@
-package com.zuo.takephoto.util;
+package com.zuo.takepicture.util;
 
 /*
  * Copyright (C) 2013 The Android Open Source Project

@@ -1,30 +1,25 @@
-# takephoto
+# takepicture
 拍照和相册选择
 
         //引用(最新)
-        implementation 'com.github.zuochunsheng:takephoto:1.1'
+        implementation 'com.github.zuochunsheng:takepicture:1.0'
 
         // 使用方法
-        //isNeedCrop 是否裁剪 默认false
-        TakephotoUtil.getInstance(this)
-                .setIsNeedCrop(isNeedCrop)
-                .checkPermissions(new IUploadEvent() {
-                    @Override
-                    public void takephotoSuccessEvent(String originUri, String cropUri) {
-                        Log.e("tag", "原始路径:" + originUri);
-                        //Log.e("zuo", "裁剪后缓存的路径 :" + cropUri);
-                        Glide.with(MainActivity.this)
-                                .load(originUri)
-                                .placeholder(R.mipmap.ic_launcher)
-                                .centerCrop()
-                                .into(imageView);
-                    }
+       TakepictureUtil.getInstance(this)
+                   .checkPermissions(new IUploadEvent() {
+                       @Override
+                       public void takepictureSuccessEvent(String originUri) {
+                           Log.e("zuo", "原始路径:" + originUri);
+                           //Log.e("zuo", "原始.getAbsolutePath<> " + new File(originUri).getAbsolutePath() + " ,大小<> " + new File(originUri).length());
 
-                    @Override
-                    public void takephotoErrorEvent(String error) {
-                        Log.e("zuo", "takephotoErrorEvent =" + error);
-                    }
-                });
+                           Glide.with(MainActivity.this)
+                                   .load(originUri)
+                                   .placeholder(R.mipmap.ic_launcher)
+                                   .centerCrop()
+                                   .into(iv);
+                       }
+
+                   });
 
 
-   1.1 修复从相册选择照片 文件大小为0的问题
+

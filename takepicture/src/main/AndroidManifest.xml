@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.zuo.takephoto">
+    package="com.zuo.takepicture">
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -13,7 +13,7 @@
         <!-- android.support.v4.content.FileProvider -->
         <provider
             android:name=".util.FileProvider"
-            android:authorities="com.zuo.takephoto.fileprovider"
+            android:authorities="com.zuo.takepicture.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -21,10 +21,6 @@
                 android:resource="@xml/file_paths_public" />
         </provider>
 
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!-- 拍照 背景透明 -->
         <activity
             android:name=".ShadowActivity"

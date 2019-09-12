@@ -37,8 +37,5 @@ dependencies {
     //permission
     api 'com.github.zuochunsheng:permission:0.3'
 
-    //图片选择  裁剪
-    api 'com.github.yalantis:ucrop:2.2.2'
-
 
 }
