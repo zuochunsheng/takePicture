@@ -2,7 +2,7 @@
 拍照和相册选择
 
         //引用(最新)
-        implementation 'com.github.zuochunsheng:takepicture:v1.0'
+        implementation 'com.github.zuochunsheng:takepicture:v1.2'
 
         // 使用方法
        TakepictureUtil.getInstance(this)
