@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -39,8 +40,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.core.content.ContextCompat;
 
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;

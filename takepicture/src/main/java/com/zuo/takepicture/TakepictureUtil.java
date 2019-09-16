@@ -3,6 +3,7 @@ package com.zuo.takepicture;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.BottomSheetDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -10,7 +11,7 @@ import android.widget.Toast;
 
 import com.chunsheng.permission.IPermission;
 import com.chunsheng.permission.PermissionUtil;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 
 import java.util.List;
 
