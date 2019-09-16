@@ -11,10 +11,7 @@ import android.widget.Toast;
 
 import com.chunsheng.permission.IPermission;
 import com.chunsheng.permission.PermissionUtil;
-
-
 import java.util.List;
-
 import com.zuo.takepicture.R;
 
 
