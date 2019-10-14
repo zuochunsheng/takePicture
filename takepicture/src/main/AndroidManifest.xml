@@ -13,7 +13,7 @@
         <!-- android.support.v4.content.FileProvider -->
         <provider
             android:name=".util.FileProvider"
-            android:authorities="com.zuo.takepicture.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -2,6 +2,7 @@ package com.zuo.takepicture;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -79,7 +80,7 @@ public class ShadowActivity extends Activity {
         // Android7.0以上URI
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             //通过FileProvider创建一个content类型的Uri
-            mProviderUri = FileProvider.getUriForFile(this, "com.zuo.takepicture.fileprovider", file);//manifest 值一样
+            mProviderUri = FileProvider.getUriForFile(this, getFileProviderName(this), file);//manifest 值一样
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mProviderUri);
             //添加这一句表示对目标应用临时授权该Uri所代表的文件
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -123,7 +124,7 @@ public class ShadowActivity extends Activity {
                     break;
             }
         } else if (resultCode == RESULT_CANCELED) {
-           // TakepictureUtil.getInstance(this).onRequestPermissionsResult(TakepictureUtil.RESULT_TAKEPHOTO_ERROR,  "");
+            // TakepictureUtil.getInstance(this).onRequestPermissionsResult(TakepictureUtil.RESULT_TAKEPHOTO_ERROR,  "");
             finish();
         }
     }
@@ -147,5 +148,8 @@ public class ShadowActivity extends Activity {
 
     }
 
+    public static String getFileProviderName(Context context) {
+        return context.getPackageName() + ".fileprovider";
+    }
 
 }

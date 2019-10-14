@@ -11,7 +11,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tv_bottomsheet_photolist"
+        android:id="@+id/tv_bottomsheet_photolist_com_takepicture"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
@@ -28,7 +28,7 @@
         android:layout_height="1dp"/>
 
     <TextView
-        android:id="@+id/tv_bottomsheet_takephoto"
+        android:id="@+id/tv_bottomsheet_takephoto_com_takepicture"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:textSize="16sp"
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <TextView
-        android:id="@+id/tv_bottomsheet_cancel"
+        android:id="@+id/tv_bottomsheet_cancel_com_takepicture"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_gravity="center_horizontal"

@@ -76,12 +76,12 @@ public class TakepictureUtil {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialogStyle);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog);
 
-        TextView tv_bottomsheet_photolist = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_photolist);
-        TextView tv_bottomsheet_takephoto = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_takephoto);
-        TextView tv_bottomsheet_cancel = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_cancel);
+        TextView tvBottomsheetPhotolist = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_photolist_com_takepicture);
+        TextView tvBottomsheetTakephoto = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_takephoto_com_takepicture);
+        TextView tvBottomsheetCancel = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_cancel_com_takepicture);
 
         //从相册选择一张
-        tv_bottomsheet_photolist.setOnClickListener(new View.OnClickListener() {
+        tvBottomsheetPhotolist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startShadowActivity(0);
@@ -90,7 +90,7 @@ public class TakepictureUtil {
             }
         });
         // 拍照 一张
-        tv_bottomsheet_takephoto.setOnClickListener(new View.OnClickListener() {
+        tvBottomsheetTakephoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -99,7 +99,7 @@ public class TakepictureUtil {
             }
         });
 
-        tv_bottomsheet_cancel.setOnClickListener(new View.OnClickListener() {
+        tvBottomsheetCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bottomSheetDialog.cancel();
