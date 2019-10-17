@@ -4,15 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chunsheng.permission.IPermission;
 import com.chunsheng.permission.PermissionUtil;
+
 import java.util.List;
-import com.zuo.takepicture.R;
 
 
 /**
@@ -23,7 +22,6 @@ public class TakepictureUtil {
 
 
     public static final int RESULT_TAKEPHOTO_SUCCESS = 0;
-    //public static final int RESULT_TAKEPHOTO_ERROR = 1;
 
     private static IUploadEvent mUploadListener;
 
@@ -38,7 +36,7 @@ public class TakepictureUtil {
         return instance;
     }
 
-    public TakepictureUtil(Context context) {
+    private TakepictureUtil(Context context) {
         this.context = context;
     }
 
@@ -46,6 +44,9 @@ public class TakepictureUtil {
         mUploadListener = nUploadListener;
     }
 
+    public void releaseInstance() {
+        instance = null;
+    }
 
     //  6.0 检查 权限
     public void checkPermissions(final IUploadEvent nUploadListener) {
@@ -74,7 +75,7 @@ public class TakepictureUtil {
     // 底部弹框
     private void initBottomSheetDialog() {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialogStyle);
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog);
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_takepicturen);
 
         TextView tvBottomsheetPhotolist = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_photolist_com_takepicture);
         TextView tvBottomsheetTakephoto = (TextView) bottomSheetDialog.findViewById(R.id.tv_bottomsheet_takephoto_com_takepicture);
@@ -124,7 +125,7 @@ public class TakepictureUtil {
         switch (resultCode) {
             case RESULT_TAKEPHOTO_SUCCESS:
                 mUploadListener.takepictureSuccessEvent(result);
-
+                //releaseInstance();
                 break;
 
         }
