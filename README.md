@@ -2,7 +2,7 @@
 拍照和相册选择
 
         //引用(最新)
-        implementation 'com.github.zuochunsheng:takepicture:v1.3'
+        implementation 'com.github.zuochunsheng:takepicture:v1.6'
 
         // 使用方法
        TakepictureUtil.getInstance(this)
@@ -22,4 +22,9 @@
        });
 
 
+    @Override
+    protected void onDestroy() {
+        TakepictureUtil.getInstance(this).releaseInstance();
+        super.onDestroy();
+    }
 
